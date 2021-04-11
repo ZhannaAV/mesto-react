@@ -1,0 +1,101 @@
+import Header from './Header'
+import Footer from './Footer'
+import Main from './Main'
+import ImagePopup from "./ImagePopup"
+import PopupWithForm from './PopupWithForm'
+import React from 'react'
+
+
+function App() {
+    const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false)
+    const [isEditProfilePopupOpen, setProfilePopupOpen] = React.useState(false)
+    const [isAddPlacePopupOpen, setPlacePopupOpen] = React.useState(false)
+
+
+    function handleEditAvatarClick() {
+        setAvatarPopupOpen(true)
+    }
+
+    function handleEditProfileClick() {
+        setProfilePopupOpen(true)
+    }
+
+    function handleAddPlaceClick() {
+        setPlacePopupOpen(true)
+    }
+
+    function closeAllPopups() {
+        setAvatarPopupOpen(false)
+        setProfilePopupOpen(false)
+        setPlacePopupOpen(false)
+    }
+
+    return (
+        <div className="App">
+            <div className="page__container">
+                <Header/>
+                <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick}
+                      onAddPlace={handleAddPlaceClick}/>
+                <Footer/>
+
+                {/*попап редактирования аватара*/}
+                <PopupWithForm isOpen={isEditAvatarPopupOpen ? 'popup_opened' : ''} onClose={closeAllPopups}
+                               name='avatar' title='Обновить аватар'>
+                    <fieldset className="popup__input-field">
+                        <input id="avatar" className="popup__input popup__input_type_avatar" type="url" name="avatar"
+                               placeholder="Ссылка на изображение"
+                               required/>
+                        <span className="popup__input-error avatar-error"></span>
+                    </fieldset>
+                </PopupWithForm>
+
+                {/*попап редактирования профайла*/}
+                <PopupWithForm isOpen={isEditProfilePopupOpen && 'popup_opened'} onClose={closeAllPopups}
+                               name='edit-profile'
+                               title='Редактировать профиль'>
+                    <fieldset className="popup__input-field">
+                        <input id="profile-name" className="popup__input popup__input_type_name" type="text" name="name"
+                               placeholder="Имя"
+                               minLength="2" maxlength="40"
+                               required/>
+                        <span className="popup__input-error profile-name-error"></span>
+                        <input id="about" className="popup__input popup__input_type_about" type="text" name="about"
+                               placeholder="О себе"
+                               minlength="2" maxlength="200"
+                               required/>
+                        <span className="popup__input-error about-error"></span>
+                    </fieldset>
+                </PopupWithForm>
+
+                {/*попап добавления карточек*/}
+                <PopupWithForm isOpen={isAddPlacePopupOpen && 'popup_opened'} onClose={closeAllPopups} name='add-card'
+                               title='Новое место'>
+                    <fieldset className="popup__input-field">
+                        <input id="place-name" className="popup__input popup__input_type_place" type="text" name="name"
+                               placeholder="Название"
+                               minlength="2" maxlength="30"
+                               required/>
+                        <span className="popup__input-error place-name-error"></span>
+                        <input id="link" className="popup__input popup__input_type_url" type="url" name="link"
+                               placeholder="Ссылка на картинку"
+                               required/>
+                        <span className="popup__input-error link-error"></span>
+                    </fieldset>
+                </PopupWithForm>
+
+                {/*попап с картинкой*/}
+                <ImagePopup/>
+
+                <div className="popup popup_for_submit">
+                    <form className="popup__form popup__form_for_submit" name="card-delete">
+                        <h2 className="popup__title">Вы уверены?</h2>
+                        <button className="popup__submit-button" type="submit">Да</button>
+                        <button className="popup__close" type="button" aria-label="закрыть окно"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default App;
