@@ -18,14 +18,14 @@ function Main(props) {
                 setUserAvatar(res.avatar)
             })
             .catch((err) => console.log(err))
-    },[])
+    }, [])
 
     React.useEffect(() => {
         api.getInitialCards()
             .then(res => {
                 setCards(res)
             })
-    },[])
+    }, [])
 
     return (
         <main className="content">
@@ -50,7 +50,7 @@ function Main(props) {
             <ul className="cards">
                 {cards.map(card => (
                     <div key={card._id}>
-                        <Card title={card.name} link={card.link} like={card.likes.length}/>
+                        <Card card={card} onCardClick={props.onCardClick}/>
                     </div>
                 ))}
             </ul>

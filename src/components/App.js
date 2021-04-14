@@ -10,8 +10,11 @@ function App() {
     const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false)
     const [isEditProfilePopupOpen, setProfilePopupOpen] = React.useState(false)
     const [isAddPlacePopupOpen, setPlacePopupOpen] = React.useState(false)
-    const [selectedCard, setSelectedCard] =React.useState('')
+    const [selectedCard, setSelectedCard] = React.useState('')
 
+    function handleCardClick(card) {
+        setSelectedCard(card)
+    }
 
     function handleEditAvatarClick() {
         setAvatarPopupOpen(true)
@@ -29,6 +32,7 @@ function App() {
         setAvatarPopupOpen(false)
         setProfilePopupOpen(false)
         setPlacePopupOpen(false)
+        setSelectedCard('')
     }
 
     return (
@@ -36,7 +40,7 @@ function App() {
             <div className="page__container">
                 <Header/>
                 <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick}
-                      onAddPlace={handleAddPlaceClick}/>
+                      onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick}/>
                 <Footer/>
 
                 {/*попап редактирования аватара*/}
@@ -85,7 +89,7 @@ function App() {
                 </PopupWithForm>
 
                 {/*попап с картинкой*/}
-                <ImagePopup/>
+                <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
 
                 <div className="popup popup_for_submit">
                     <form className="popup__form popup__form_for_submit" name="card-delete">
