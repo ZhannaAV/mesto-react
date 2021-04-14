@@ -10,6 +10,7 @@ function App() {
     const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false)
     const [isEditProfilePopupOpen, setProfilePopupOpen] = React.useState(false)
     const [isAddPlacePopupOpen, setPlacePopupOpen] = React.useState(false)
+    const [selectedCard, setSelectedCard] =React.useState('')
 
 
     function handleEditAvatarClick() {
@@ -56,12 +57,12 @@ function App() {
                     <fieldset className="popup__input-field">
                         <input id="profile-name" className="popup__input popup__input_type_name" type="text" name="name"
                                placeholder="Имя"
-                               minLength="2" maxlength="40"
+                               minLength="2" maxLength="40"
                                required/>
                         <span className="popup__input-error profile-name-error"></span>
                         <input id="about" className="popup__input popup__input_type_about" type="text" name="about"
                                placeholder="О себе"
-                               minlength="2" maxlength="200"
+                               minLength="2" maxLength="200"
                                required/>
                         <span className="popup__input-error about-error"></span>
                     </fieldset>
@@ -73,7 +74,7 @@ function App() {
                     <fieldset className="popup__input-field">
                         <input id="place-name" className="popup__input popup__input_type_place" type="text" name="name"
                                placeholder="Название"
-                               minlength="2" maxlength="30"
+                               minLength="2" maxLength="30"
                                required/>
                         <span className="popup__input-error place-name-error"></span>
                         <input id="link" className="popup__input popup__input_type_url" type="url" name="link"

@@ -1,12 +1,14 @@
 import AvatarBtn from '../images/Avatar_button.svg'
 import Avatar from '../images/Avatar.jpg'
 import React from 'react'
+import Card from "./Card";
 import api from '../utils/Api'
 
 function Main(props) {
     const [userName, setUserName] = React.useState('Жак-Ив Кусто')
     const [userDescription, setUserDescription] = React.useState('Исследователь океана')
     const [userAvatar, setUserAvatar] = React.useState(Avatar)
+    const [cards, setCards] = React.useState([])
 
     React.useEffect(() => {
         api.getInitialProfile()
@@ -16,8 +18,14 @@ function Main(props) {
                 setUserAvatar(res.avatar)
             })
             .catch((err) => console.log(err))
-    })
+    },[])
 
+    React.useEffect(() => {
+        api.getInitialCards()
+            .then(res => {
+                setCards(res)
+            })
+    },[])
 
     return (
         <main className="content">
@@ -40,19 +48,11 @@ function Main(props) {
                         onClick={props.onAddPlace}></button>
             </section>
             <ul className="cards">
-                <template className="template">
-                    <li className="card">
-                        <div className="card__image"></div>
-                        <div className="card__caption">
-                            <h2 className="card__title"></h2>
-                            <div className="card__like-group">
-                                <button className="card__like" type="button" aria-label="поставить лайк"></button>
-                                <p className="card__like-counter"></p>
-                            </div>
-                        </div>
-                        <button className="card__delete" type="button" aria-label="удалить карточку"></button>
-                    </li>
-                </template>
+                {cards.map(card => (
+                    <div key={card._id}>
+                        <Card title={card.name} link={card.link} like={card.likes.length}/>
+                    </div>
+                ))}
             </ul>
         </main>
     )
