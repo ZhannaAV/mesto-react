@@ -1,6 +1,9 @@
-function Footer(){
+import React from 'react'
+
+function Footer() {
     return (
-        <footer className="footer">&copy; 2021 Mesto Russia</footer>
+        <footer className="footer">&copy; {new Date().getFullYear()} Mesto Russia</footer>
     )
 }
-     export default Footer
+
+export default Footer

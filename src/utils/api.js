@@ -7,6 +7,13 @@ class Api {
         this._token = personalData.token
     }
 
+    _checkResponse(res) {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+    }
+
 //возвращает массив со всеми данными профиля с сервера
     getInitialProfile() {
         return fetch(`${this._baseUrl}/${this._cohortId}/users/me`, {
@@ -14,10 +21,7 @@ class Api {
                 authorization: `${this._token}`
             }
         })
-            .then(res => {
-                if (res.ok) return res.json();
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 
 //меняет данные профайла на сервере и возвращает все данные профиля
@@ -33,10 +37,7 @@ class Api {
                 about: about
             })
         })
-            .then(res => {
-                if (res.ok) return res.json();
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 
     //меняет данные профайла на сервере и возвращает все данные профиля
@@ -51,10 +52,7 @@ class Api {
                 avatar: avatar,
             })
         })
-            .then(res => {
-                if (res.ok) return res.json();
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 
 //возвращает массив со всеми данными профиля с сервера
@@ -64,10 +62,7 @@ class Api {
                 authorization: `${this._token}`,
             }
         })
-            .then(res => {
-                if (res.ok) return res.json();
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 
     //добавляет карточку на сервер и возвращает ответ
@@ -83,10 +78,7 @@ class Api {
                 link: link
             })
         })
-            .then(res => {
-                if (res.ok) return res.json();
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 
     //удаляет карточку
@@ -114,10 +106,7 @@ class Api {
                 authorization: `${this._token}`
             }
         })
-            .then(res => {
-                if (res.ok) return res.json()
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 
 //минус лайк
@@ -128,10 +117,7 @@ class Api {
                 authorization: `${this._token}`
             }
         })
-            .then(res => {
-                if (res.ok) return res.json()
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse);
     }
 }
 

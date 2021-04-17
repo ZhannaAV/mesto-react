@@ -1,16 +1,16 @@
+import React from 'react'
 import Header from './Header'
 import Footer from './Footer'
 import Main from './Main'
 import ImagePopup from "./ImagePopup"
 import PopupWithForm from './PopupWithForm'
-import React from 'react'
 
 
 function App() {
     const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false)
     const [isEditProfilePopupOpen, setProfilePopupOpen] = React.useState(false)
     const [isAddPlacePopupOpen, setPlacePopupOpen] = React.useState(false)
-    const [selectedCard, setSelectedCard] = React.useState('')
+    const [selectedCard, setSelectedCard] = React.useState(null)
 
     function handleCardClick(card) {
         setSelectedCard(card)
@@ -32,7 +32,7 @@ function App() {
         setAvatarPopupOpen(false)
         setProfilePopupOpen(false)
         setPlacePopupOpen(false)
-        setSelectedCard('')
+        setSelectedCard(null)
     }
 
     return (
@@ -91,13 +91,8 @@ function App() {
                 {/*попап с картинкой*/}
                 <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
 
-                <div className="popup popup_for_submit">
-                    <form className="popup__form popup__form_for_submit" name="card-delete">
-                        <h2 className="popup__title">Вы уверены?</h2>
-                        <button className="popup__submit-button" type="submit">Да</button>
-                        <button className="popup__close" type="button" aria-label="закрыть окно"></button>
-                    </form>
-                </div>
+                {/*{попап подтверждения}*/}
+                <PopupWithForm name='card-delete' title='Вы уверены?'/>
             </div>
         </div>
     )

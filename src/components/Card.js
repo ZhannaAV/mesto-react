@@ -1,6 +1,6 @@
 import React from "react";
 
-function Card(props){
+function Card(props) {
 
     function handleClick() {
         props.onCardClick(props.card);
@@ -8,7 +8,8 @@ function Card(props){
 
     return (
         <li className="card">
-            <div className="card__image" onClick={handleClick} style={{ backgroundImage: `url(${props.card.link})` }}></div>
+            <div className="card__image" onClick={handleClick}
+                 style={{backgroundImage: `url(${props.card.link})`}}></div>
             <div className="card__caption">
                 <h2 className="card__title">{props.card.name}</h2>
                 <div className="card__like-group">
