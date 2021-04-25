@@ -97,22 +97,11 @@ class Api {
                 return Promise.reject(`Ошибка: ${res.status}`);
             })
     }
-
-//плюс лайк
-    setLikeCard(cardId) {
+//добавление и убирание лайка
+    changeLikeCardStatus(cardId, isLiked) {
+        const method = isLiked ? 'DELETE' : 'PUT';
         return fetch(`${this._baseUrl}/${this._cohortId}/cards/likes/${cardId}`, {
-            method: 'PUT',
-            headers: {
-                authorization: `${this._token}`
-            }
-        })
-            .then(this._checkResponse);
-    }
-
-//минус лайк
-    removeLikeCard(cardId) {
-        return fetch(`${this._baseUrl}/${this._cohortId}/cards/likes/${cardId}`, {
-            method: 'DELETE',
+            method: method,
             headers: {
                 authorization: `${this._token}`
             }
@@ -120,6 +109,5 @@ class Api {
             .then(this._checkResponse);
     }
 }
-
 const api = new Api(baseUrl, personalData);
 export default api
