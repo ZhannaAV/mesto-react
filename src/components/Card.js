@@ -1,23 +1,35 @@
 import React from "react";
+import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
 function Card(props) {
+    const{card} = props
+
+    const currentUser = React.useContext(CurrentUserContext)
+
+    // Определяем, являемся ли мы владельцем текущей карточки
+    const isOwn = card.owner._id === currentUser._id;
+    const cardDeleteBtnClassName = `card__delete ${!isOwn && 'card__delete_hidden'}`
+
+    // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const cardLikeBtnClassName = `card__like ${isLiked && 'card__like_active'}`
 
     function handleClick() {
-        props.onCardClick(props.card);
+        props.onCardClick(card);
     }
 
     return (
         <li className="card">
             <div className="card__image" onClick={handleClick}
-                 style={{backgroundImage: `url(${props.card.link})`}}></div>
+                 style={{backgroundImage: `url(${card.link})`}}></div>
             <div className="card__caption">
-                <h2 className="card__title">{props.card.name}</h2>
+                <h2 className="card__title">{card.name}</h2>
                 <div className="card__like-group">
-                    <button className="card__like" type="button" aria-label="поставить лайк"></button>
-                    <p className="card__like-counter">{props.card.likes.length}</p>
+                    <button className={cardLikeBtnClassName} type="button" aria-label="поставить лайк"></button>
+                    <p className="card__like-counter">{card.likes.length}</p>
                 </div>
             </div>
-            <button className="card__delete" type="button" aria-label="удалить карточку"></button>
+            <button className={cardDeleteBtnClassName} type="button" aria-label="удалить карточку"></button>
         </li>
     )
 }
