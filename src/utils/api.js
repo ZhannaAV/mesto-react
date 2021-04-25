@@ -78,25 +78,20 @@ class Api {
                 link: link
             })
         })
-            .then(this._checkResponse);
+            .then(this._checkResponse)
     }
 
     //удаляет карточку
-    deleteCard(cardID, element) {
+    deleteCard(cardID) {
         return fetch(`${this._baseUrl}/${this._cohortId}/cards/${cardID}`, {
             method: 'DELETE',
             headers: {
                 authorization: `${this._token}`
             }
         })
-            .then(res => {
-                if (res.ok) {
-                    element.closest('.card').remove();
-                    return res.json()
-                }
-                return Promise.reject(`Ошибка: ${res.status}`);
-            })
+            .then(this._checkResponse)
     }
+
 //добавление и убирание лайка
     changeLikeCardStatus(cardId, isLiked) {
         const method = isLiked ? 'DELETE' : 'PUT';

@@ -19,7 +19,7 @@ function App() {
         api.getInitialProfile()
             .then(res => setCurrentUser(res))
             .catch((err) => console.log(err))
-    })
+    },[])
 
 
     function handleCardClick(card) {

@@ -10,22 +10,27 @@ function Main(props) {
     const [cards, setCards] = React.useState([])
     const currentUser = React.useContext(CurrentUserContext)
 
-        //обработчик лайков
+    //обновляет стейт карточек после полож. ответа api об изм лайка
     function handleCardLike(card) {
-        // Снова проверяем, есть ли уже лайк на этой карточке
         const isLiked = card.likes.some(i => i._id === currentUser._id);
-
-        // Отправляем запрос в API и получаем обновлённые данные карточки
-        api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
-            setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
-        });
+        api.changeLikeCardStatus(card._id, isLiked)
+            .then((newCard) => {
+                setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
+            })
+            .catch((err) => console.log(err))
+    }
+//меняет стейт карточек, если пришел полож ответ с сервера об удал карточки
+    function handleCardDelete(card) {
+        api.deleteCard(card._id)
+            .then(() => {
+                setCards(cards.filter((c) => card._id !== c._id))
+            })
+            .catch((err) => console.log(err))
     }
 
     React.useEffect(() => {
         api.getInitialCards()
-            .then(res => {
-                setCards(res)
-            })
+            .then(res => setCards(res))
             .catch((err) => console.log(err))
     }, [])
 
@@ -53,7 +58,8 @@ function Main(props) {
             <ul className="cards">
                 {cards.map(card => (
                     <div key={card._id}>
-                        <Card card={card} onCardClick={onCardClick} onCardLike={handleCardLike}/>
+                        <Card card={card} onCardClick={onCardClick} onCardLike={handleCardLike}
+                              onCardDelete={handleCardDelete}/>
                     </div>
                 ))}
             </ul>
