@@ -6,6 +6,7 @@ import ImagePopup from "./ImagePopup"
 import PopupWithForm from './PopupWithForm'
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import api from '../utils/api'
+import EditProfilePopup from "./EditProfilePopup";
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
         api.getInitialProfile()
             .then(res => setCurrentUser(res))
             .catch((err) => console.log(err))
-    },[])
+    }, [])
 
 
     function handleCardClick(card) {
@@ -45,6 +46,13 @@ function App() {
         setSelectedCard(null)
     }
 
+    function handleUpdateUser({name, about}) {
+        api.changeInfoProfile({name, about})
+            .then(res => setCurrentUser(res))
+            .catch((err) => console.log(err))
+        setProfilePopupOpen(false)
+    }
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="App">
@@ -67,23 +75,8 @@ function App() {
                     </PopupWithForm>
 
                     {/*попап редактирования профайла*/}
-                    <PopupWithForm isOpen={isEditProfilePopupOpen && 'popup_opened'} onClose={closeAllPopups}
-                                   name='edit-profile'
-                                   title='Редактировать профиль'>
-                        <fieldset className="popup__input-field">
-                            <input id="profile-name" className="popup__input popup__input_type_name" type="text"
-                                   name="name"
-                                   placeholder="Имя"
-                                   minLength="2" maxLength="40"
-                                   required/>
-                            <span className="popup__input-error profile-name-error"></span>
-                            <input id="about" className="popup__input popup__input_type_about" type="text" name="about"
-                                   placeholder="О себе"
-                                   minLength="2" maxLength="200"
-                                   required/>
-                            <span className="popup__input-error about-error"></span>
-                        </fieldset>
-                    </PopupWithForm>
+                    <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}
+                                      onUpdateUser={handleUpdateUser}/>
 
                     {/*попап добавления карточек*/}
                     <PopupWithForm isOpen={isAddPlacePopupOpen && 'popup_opened'} onClose={closeAllPopups}

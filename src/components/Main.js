@@ -19,6 +19,7 @@ function Main(props) {
             })
             .catch((err) => console.log(err))
     }
+
 //меняет стейт карточек, если пришел полож ответ с сервера об удал карточки
     function handleCardDelete(card) {
         api.deleteCard(card._id)
