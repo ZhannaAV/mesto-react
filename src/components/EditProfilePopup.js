@@ -2,11 +2,11 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
-function EditProfilePopup(props){
+function EditProfilePopup(props) {
     const currentUser = React.useContext(CurrentUserContext)
-    const {isOpen, onClose} = props
+    const {isOpen, onClose, onUpdateUser} = props
     const [name, setName] = React.useState('')
-    const[description, setDescription] = React.useState('')
+    const [description, setDescription] = React.useState('')
 
     React.useEffect(() => {
         setName(currentUser.name);
@@ -23,13 +23,14 @@ function EditProfilePopup(props){
 
     function handleSubmit(e) {
         e.preventDefault();
-        props.onUpdateUser({
+        onUpdateUser({
             name,
             about: description,
         });
     }
+
 //если данные корректировались, но не сохранились - обновляет значение полей на прежнее
-    function close(){
+    function close() {
         onClose()
         setName(currentUser.name);
         setDescription(currentUser.about);

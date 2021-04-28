@@ -8,7 +8,7 @@ import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import api from '../utils/api'
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
-
+import AddPlacePopup from "./AddPlacePopup";
 
 function App() {
     const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false)
@@ -16,10 +16,17 @@ function App() {
     const [isAddPlacePopupOpen, setPlacePopupOpen] = React.useState(false)
     const [selectedCard, setSelectedCard] = React.useState(null)
     const [currentUser, setCurrentUser] = React.useState({})
+    const [cards, setCards] = React.useState([])
 
     React.useEffect(() => {
         api.getInitialProfile()
             .then(res => setCurrentUser(res))
+            .catch((err) => console.log(err))
+    }, [])
+
+    React.useEffect(() => {
+        api.getInitialCards()
+            .then(res => setCards(res))
             .catch((err) => console.log(err))
     }, [])
 
@@ -61,39 +68,54 @@ function App() {
         setAvatarPopupOpen(false)
     }
 
+    //обновляет стейт карточек после полож. ответа api об изм лайка
+    function handleCardLike(card) {
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        api.changeLikeCardStatus(card._id, isLiked)
+            .then((newCard) => {
+                setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
+            })
+            .catch((err) => console.log(err))
+    }
+
+//меняет стейт карточек, если пришел полож ответ с сервера об удал карточки
+    function handleCardDelete(card) {
+        api.deleteCard(card._id)
+            .then(() => {
+                setCards(cards.filter((c) => card._id !== c._id))
+            })
+            .catch((err) => console.log(err))
+    }
+
+    //добавляет карточки
+    function handleAddPlaceSubmit({name, link}) {
+        api.postNewCard({name, link})
+            .then(res => setCards([res, ...cards]))
+            .catch((err) => console.log(err))
+        setPlacePopupOpen(false)
+    }
+
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="App">
                 <div className="page__container">
                     <Header/>
                     <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick}
-                          onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick}/>
+                          onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick} onCardLike={handleCardLike}
+                          onCardDelete={handleCardDelete} cards={cards}/>
                     <Footer/>
 
                     {/*попап редактирования аватара*/}
-                    <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
+                    <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}
+                                     onUpdateAvatar={handleUpdateAvatar}/>
 
                     {/*попап редактирования профайла*/}
                     <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}
                                       onUpdateUser={handleUpdateUser}/>
 
                     {/*попап добавления карточек*/}
-                    <PopupWithForm isOpen={isAddPlacePopupOpen && 'popup_opened'} onClose={closeAllPopups}
-                                   name='add-card'
-                                   title='Новое место'>
-                        <fieldset className="popup__input-field">
-                            <input id="place-name" className="popup__input popup__input_type_place" type="text"
-                                   name="name"
-                                   placeholder="Название"
-                                   minLength="2" maxLength="30"
-                                   required/>
-                            <span className="popup__input-error place-name-error"></span>
-                            <input id="link" className="popup__input popup__input_type_url" type="url" name="link"
-                                   placeholder="Ссылка на картинку"
-                                   required/>
-                            <span className="popup__input-error link-error"></span>
-                        </fieldset>
-                    </PopupWithForm>
+                    <AddPlacePopup onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen}
+                                   onClose={closeAllPopups}/>
 
                     {/*попап с картинкой*/}
                     <ImagePopup onClose={closeAllPopups} card={selectedCard}/>

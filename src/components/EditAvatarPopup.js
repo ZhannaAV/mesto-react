@@ -1,8 +1,9 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
+
 //https://github.com/ZhannaAV/portfolio/blob/main/image/avatar.jpg?raw=true
 
-function EditAvatarPopup(props){
+function EditAvatarPopup(props) {
     const {isOpen, onClose, onUpdateAvatar} = props
     const avatarRef = React.useRef()
 
@@ -13,7 +14,7 @@ function EditAvatarPopup(props){
         });
     }
 
-    return(
+    return (
         <PopupWithForm isOpen={isOpen ? 'popup_opened' : ''} onClose={onClose}
                        name='avatar' title='Обновить аватар' onSubmit={handleSubmit}>
             <fieldset className="popup__input-field">
