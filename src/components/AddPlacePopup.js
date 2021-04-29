@@ -2,7 +2,7 @@ import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup(props) {
-    const {isOpen, onAddPlace, onClose} = props
+    const {isOpen, onAddPlace, onClose, btnText} = props
     const [name, setName] = React.useState('')
     const [link, setLink] = React.useState('')
 
@@ -21,7 +21,7 @@ function AddPlacePopup(props) {
     }
 
     return (
-        <PopupWithForm isOpen={isOpen && 'popup_opened'} onClose={onClose} onSubmit={handleSubmit}
+        <PopupWithForm isOpen={isOpen && 'popup_opened'} onClose={onClose} onSubmit={handleSubmit} btnText={btnText}
                        name='add-card'
                        title='Новое место'>
             <fieldset className="popup__input-field">

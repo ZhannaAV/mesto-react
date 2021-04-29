@@ -17,6 +17,8 @@ function App() {
     const [selectedCard, setSelectedCard] = React.useState(null)
     const [currentUser, setCurrentUser] = React.useState({})
     const [cards, setCards] = React.useState([])
+    const [isLoad, setIsLoad] = React.useState(false)
+    let loadTextBtn = isLoad ? 'Сохранение..' : 'Сохранить'
 
     React.useEffect(() => {
         api.getInitialProfile()
@@ -55,17 +57,21 @@ function App() {
     }
 
     function handleUpdateUser({name, about}) {
+        setIsLoad(true)
         api.changeInfoProfile({name, about})
             .then(res => setCurrentUser(res))
             .catch((err) => console.log(err))
+            .finally(() => setIsLoad(false))
         setProfilePopupOpen(false)
     }
 
     function handleUpdateAvatar({avatar}) {
+        setIsLoad(true)
         api.changeAvatarProfile({avatar})
             .then(res => setCurrentUser(res))
             .catch((err) => console.log(err))
         setAvatarPopupOpen(false)
+            .finally(() => setIsLoad(false))
     }
 
     //обновляет стейт карточек после полож. ответа api об изм лайка
@@ -89,11 +95,14 @@ function App() {
 
     //добавляет карточки
     function handleAddPlaceSubmit({name, link}) {
+        setIsLoad(true)
         api.postNewCard({name, link})
             .then(res => setCards([res, ...cards]))
             .catch((err) => console.log(err))
+            .finally(() => setIsLoad(false))
         setPlacePopupOpen(false)
     }
+
 
     return (
         <CurrentUserContext.Provider value={currentUser}>
@@ -107,21 +116,21 @@ function App() {
 
                     {/*попап редактирования аватара*/}
                     <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}
-                                     onUpdateAvatar={handleUpdateAvatar}/>
+                                     onUpdateAvatar={handleUpdateAvatar} btnText={loadTextBtn}/>
 
                     {/*попап редактирования профайла*/}
                     <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups}
-                                      onUpdateUser={handleUpdateUser}/>
+                                      onUpdateUser={handleUpdateUser} btnText={loadTextBtn}/>
 
                     {/*попап добавления карточек*/}
                     <AddPlacePopup onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen}
-                                   onClose={closeAllPopups}/>
+                                   onClose={closeAllPopups} btnText={loadTextBtn}/>
 
                     {/*попап с картинкой*/}
                     <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
 
                     {/*{попап подтверждения}*/}
-                    <PopupWithForm name='card-delete' title='Вы уверены?'/>
+                    <PopupWithForm name='card-delete' title='Вы уверены?' btnText={'Да'}/>
                 </div>
             </div>
         </CurrentUserContext.Provider>

@@ -4,7 +4,7 @@ import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
 function EditProfilePopup(props) {
     const currentUser = React.useContext(CurrentUserContext)
-    const {isOpen, onClose, onUpdateUser} = props
+    const {isOpen, onClose, onUpdateUser, btnText} = props
     const [name, setName] = React.useState('')
     const [description, setDescription] = React.useState('')
 
@@ -37,7 +37,7 @@ function EditProfilePopup(props) {
     }
 
     return (
-        <PopupWithForm isOpen={isOpen && 'popup_opened'} onClose={close} onSubmit={handleSubmit}
+        <PopupWithForm isOpen={isOpen && 'popup_opened'} onClose={close} onSubmit={handleSubmit} btnText={btnText}
                        name='edit-profile'
                        title='Редактировать профиль'>
             <fieldset className="popup__input-field">
