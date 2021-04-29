@@ -3,18 +3,20 @@ import Header from './Header'
 import Footer from './Footer'
 import Main from './Main'
 import ImagePopup from "./ImagePopup"
-import PopupWithForm from './PopupWithForm'
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 import api from '../utils/api'
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import SubmitDeletePopup from "./SubmitDeletePopup";
 
 function App() {
     const [isEditAvatarPopupOpen, setAvatarPopupOpen] = React.useState(false)
     const [isEditProfilePopupOpen, setProfilePopupOpen] = React.useState(false)
     const [isAddPlacePopupOpen, setPlacePopupOpen] = React.useState(false)
+    const [isSubmitPopupOpen, setSubmitPopupOpen] = React.useState(false)
     const [selectedCard, setSelectedCard] = React.useState(null)
+    const [cardForDelete, setCardForDelete] = React.useState(null)
     const [currentUser, setCurrentUser] = React.useState({})
     const [cards, setCards] = React.useState([])
     const [isLoad, setIsLoad] = React.useState(false)
@@ -53,6 +55,7 @@ function App() {
         setAvatarPopupOpen(false)
         setProfilePopupOpen(false)
         setPlacePopupOpen(false)
+        setSubmitPopupOpen(false)
         setSelectedCard(null)
     }
 
@@ -84,13 +87,19 @@ function App() {
             .catch((err) => console.log(err))
     }
 
-//меняет стейт карточек, если пришел полож ответ с сервера об удал карточки
-    function handleCardDelete(card) {
-        api.deleteCard(card._id)
+//открывает попап для подтверждения удаления
+    function handleCardDeleteChoice(card) {
+        setSubmitPopupOpen(true)
+        setCardForDelete(card)
+    }
+//окончательно удаляет карточку
+    function handleSubmitDeleteCard(){
+        api.deleteCard(cardForDelete._id)
             .then(() => {
-                setCards(cards.filter((c) => card._id !== c._id))
+                setCards(cards.filter((c) => cardForDelete._id !== c._id))
             })
             .catch((err) => console.log(err))
+        setSubmitPopupOpen(false)
     }
 
     //добавляет карточки
@@ -103,7 +112,6 @@ function App() {
         setPlacePopupOpen(false)
     }
 
-
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <div className="App">
@@ -111,7 +119,7 @@ function App() {
                     <Header/>
                     <Main onEditAvatar={handleEditAvatarClick} onEditProfile={handleEditProfileClick}
                           onAddPlace={handleAddPlaceClick} onCardClick={handleCardClick} onCardLike={handleCardLike}
-                          onCardDelete={handleCardDelete} cards={cards}/>
+                          onCardDelete={handleCardDeleteChoice} cards={cards}/>
                     <Footer/>
 
                     {/*попап редактирования аватара*/}
@@ -130,7 +138,7 @@ function App() {
                     <ImagePopup onClose={closeAllPopups} card={selectedCard}/>
 
                     {/*{попап подтверждения}*/}
-                    <PopupWithForm name='card-delete' title='Вы уверены?' btnText={'Да'}/>
+                    <SubmitDeletePopup isOpen={isSubmitPopupOpen} onClose={closeAllPopups} onCardDelete={handleSubmitDeleteCard} btnText={'Да'}/>
                 </div>
             </div>
         </CurrentUserContext.Provider>
