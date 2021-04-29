@@ -23,14 +23,11 @@ function App() {
     let loadTextBtn = isLoad ? 'Сохранение..' : 'Сохранить'
 
     React.useEffect(() => {
-        api.getInitialProfile()
-            .then(res => setCurrentUser(res))
-            .catch((err) => console.log(err))
-    }, [])
-
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then(res => setCards(res))
+        Promise.all([api.getInitialProfile(), api.getInitialCards()])
+            .then(([userData, cards]) => {
+                setCurrentUser(userData);
+                setCards(cards)
+            })
             .catch((err) => console.log(err))
     }, [])
 
@@ -62,19 +59,25 @@ function App() {
     function handleUpdateUser({name, about}) {
         setIsLoad(true)
         api.changeInfoProfile({name, about})
-            .then(res => setCurrentUser(res))
+            .then(res => {
+                setCurrentUser(res)
+                setProfilePopupOpen(false)
+            })
             .catch((err) => console.log(err))
             .finally(() => setIsLoad(false))
-        setProfilePopupOpen(false)
+
     }
 
     function handleUpdateAvatar({avatar}) {
         setIsLoad(true)
         api.changeAvatarProfile({avatar})
-            .then(res => setCurrentUser(res))
+            .then(res => {
+                setCurrentUser(res)
+                setAvatarPopupOpen(false)
+            })
             .catch((err) => console.log(err))
             .finally(() => setIsLoad(false))
-        setAvatarPopupOpen(false)
+
 
     }
 
@@ -98,19 +101,23 @@ function App() {
         api.deleteCard(cardForDelete._id)
             .then(() => {
                 setCards(cards.filter((c) => cardForDelete._id !== c._id))
+                setSubmitPopupOpen(false)
             })
             .catch((err) => console.log(err))
-        setSubmitPopupOpen(false)
+
     }
 
     //добавляет карточки
     function handleAddPlaceSubmit({name, link}) {
         setIsLoad(true)
         api.postNewCard({name, link})
-            .then(res => setCards([res, ...cards]))
+            .then(res => {
+                setCards([res, ...cards])
+                setPlacePopupOpen(false)
+            })
             .catch((err) => console.log(err))
             .finally(() => setIsLoad(false))
-        setPlacePopupOpen(false)
+
     }
 
     return (
