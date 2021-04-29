@@ -73,8 +73,9 @@ function App() {
         api.changeAvatarProfile({avatar})
             .then(res => setCurrentUser(res))
             .catch((err) => console.log(err))
-        setAvatarPopupOpen(false)
             .finally(() => setIsLoad(false))
+        setAvatarPopupOpen(false)
+
     }
 
     //обновляет стейт карточек после полож. ответа api об изм лайка
